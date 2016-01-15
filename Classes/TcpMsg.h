@@ -17,8 +17,10 @@ USING_NS_CC;
 #define SLEEP_TIME 50
 
 //TCP服务器IP&&端口;
-#define SERVER_HOST "192.168.137.3"
-#define SERVER_PORT 11009
+//#define SERVER_HOST "192.168.137.3"
+#define SERVER_HOST "159.203.197.136"
+//#define SERVER_PORT 11009
+#define SERVER_PORT 10101
 
 class TcpMsg
 {
@@ -31,15 +33,15 @@ public:
 	void tcp_stop();
 	bool isRuning();
 
-	Pocket* MakePocket(const char* msg, int msgid);
+	Pocket* MakePocket(const char* msg, unsigned int msgid);
 	Pocket* MakePocketFromData(const char* msg);
 
 	//获取接收消息队列;
 	Queue* getRecvQueue();
 	Queue* getSendQueue();
 
-	void pushSendQueue(std::string str, int msgType);//加入发送队列;
-	void pushRecvQueue(std::string str);//加入接收队列;
+	void pushSendQueue(std::string str, unsigned int msgid);//加入发送队列;
+	void pushRecvQueue(std::string str, unsigned int msgid);//加入接收队列;
 
 	void recvFunc(void);//接收消息方法;
 	void sendFunc(void);//发送消息方法;

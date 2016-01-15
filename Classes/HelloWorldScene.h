@@ -5,6 +5,10 @@
 #include "Pocket.h"
 #include "TcpMsg.h"
 
+#include "data/talkbox.pb.h"
+#pragma comment(lib, "libprotobuf.lib")
+#pragma comment(lib, "libprotoc.lib")
+
 USING_NS_CC;
 
 class HelloWorld : public cocos2d::Layer

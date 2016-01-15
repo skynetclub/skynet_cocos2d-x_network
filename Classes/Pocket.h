@@ -30,10 +30,11 @@ static const unsigned int TYPE_SELF_DEINE_MESSAGE_CLIENT_KILL_MESSAGE = 0xfffffA
 class Pocket:public Ref
 {
 public:
-    short length;
-	short version;
-	int id;
+    unsigned short length;
+	unsigned short version;
+	unsigned int id;
     char* msg;
+	
 	
 	Pocket();
 	~Pocket();
