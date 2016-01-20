@@ -5,7 +5,7 @@
 #include "Pocket.h"
 #include "TcpMsg.h"
 
-#include "data/talkbox.pb.h"
+#include "data/talkbox.h"
 #pragma comment(lib, "libprotobuf.lib")
 #pragma comment(lib, "libprotoc.lib")
 
@@ -30,8 +30,7 @@ public:
 	void msgLogic(float dt);
 
 private:
-	//Label* txtLabel;
-	LabelTTF* txtLabel;
+	Label* txtLabel;
 };
 
 #endif // __HELLOWORLD_SCENE_H__

@@ -1,9 +1,9 @@
 #ifndef POCKET_H
 #define POCKET_H
 
-#ifndef WIN32
-typedef unsigned char byte;
-#endif
+//#ifndef WIN32
+//typedef unsigned char byte;
+//#endif
 
 #include "cocos2d.h"
 using namespace cocos2d;

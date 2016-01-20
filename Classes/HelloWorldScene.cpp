@@ -30,20 +30,20 @@ bool HelloWorld::init()
 		MenuItemImage *pCloseItem = MenuItemImage::create(
 			"CloseNormal.png",
 			"CloseSelected.png",
-			this,
-			menu_selector(HelloWorld::menuCloseCallback));
+			CC_CALLBACK_1(HelloWorld::menuCloseCallback, this)
+		);
 		CC_BREAK_IF(!pCloseItem);
 		pCloseItem->setPosition(Vec2(wsize.width - 20, 20));
-		Menu* pMenu = Menu::create(pCloseItem, NULL);
-		pMenu->setPosition(Point::ZERO);
-		CC_BREAK_IF(!pMenu);
+		Menu* pMenu1 = Menu::create(pCloseItem, NULL);
+		pMenu1->setPosition(Point::ZERO);
+		CC_BREAK_IF(!pMenu1);
 		
 		//开始按钮
 		MenuItemImage *pBeginItem = MenuItemImage::create(
 			"CloseNormal.png",
 			"CloseSelected.png",
-			this,
-			menu_selector(HelloWorld::menuBeginCallback));
+			CC_CALLBACK_1(HelloWorld::menuBeginCallback, this)
+		);
 		CC_BREAK_IF(!pBeginItem);
 		pBeginItem->setPosition(Vec2(wsize.width / 4, wsize.height / 2));
 		Menu* pMenu2 = Menu::create(pBeginItem, NULL);
@@ -54,8 +54,8 @@ bool HelloWorld::init()
 		MenuItemImage *pSendItem = MenuItemImage::create(
 			"CloseNormal.png",
 			"CloseSelected.png",
-			this,
-			menu_selector(HelloWorld::menuSendCallback));
+			CC_CALLBACK_1(HelloWorld::menuSendCallback, this)
+		);
 		CC_BREAK_IF(!pSendItem);
 		pSendItem->setPosition(Vec2(wsize.width - 100, wsize.height / 2));
 		Menu* pMenu3 = Menu::create(pSendItem, NULL);
@@ -64,14 +64,25 @@ bool HelloWorld::init()
 
 
 		//添加三个按钮到player层
-		this->addChild(pMenu, 1);
-		this->addChild(pMenu2, 100);
-		this->addChild(pMenu3, 100);
+		this->addChild(pMenu1, 1);
+		this->addChild(pMenu2, 2);
+		this->addChild(pMenu3, 3);
 
 		//内容显示
-		txtLabel = LabelTTF::create("content", "Arial", 24);
+		txtLabel = Label::createWithSystemFont("content", "Arial", 24);
 		txtLabel->setPosition(Vec2(wsize.width / 2, wsize.height / 3));
 		this->addChild(txtLabel, 101);
+
+		//设置背景
+		//Sprite *bg = Sprite::create("HelloWorld.png");
+		//bg->setPosition(Vec2(wsize.width, wsize.height));
+		//bg->setContentSize(Size::Size(wsize.width, wsize.height));
+		//float spx = bg->getTextureRect().getMaxX();
+		//float spy = bg->getTextureRect().getMaxY();
+		//bg->setScaleX(wsize.width / spx); //设置精灵宽度缩放比例
+		//bg->setScaleY(wsize.height / spy);
+		//this->addChild(bg, 0);
+		
 
 		//定时调度
 		this->schedule(schedule_selector(HelloWorld::msgLogic), 0.1f);
@@ -84,7 +95,7 @@ bool HelloWorld::init()
 void HelloWorld::menuCloseCallback(Ref* pSender)
 {
 	// "close" menu item clicked
-	CCDirector::sharedDirector()->end();
+	Director::getInstance()->end();
 }
 
 void HelloWorld::menuBeginCallback(Ref* pSender)
@@ -108,18 +119,6 @@ void HelloWorld::menuSendCallback(Ref* pSender)
 	//protocol buffer
 	GOOGLE_PROTOBUF_VERIFY_VERSION;
 
-	//std::string buf;
-	//talkbox::talk_message pmsg;
-	//pmsg.set_fromuserid(11);
-	//pmsg.set_touserid(22);
-	//pmsg.set_msg("hello world!");
-	//pmsg.SerializeToString(&buf);
-	//CCLOG("msg size:%d", buf.size());
-
-	//talkbox::talk_message pmsg2;
-	//pmsg2.ParseFromString(buf);
-	//CCLOG("fromuserid:%d,touserid:%d,msg:%s", pmsg2.fromuserid(), pmsg2.touserid(), pmsg2.msg().c_str());
-
 	talkbox::talk_create user;
 	user.set_name("xfs");
 	user.set_userid(123);
@@ -127,13 +126,6 @@ void HelloWorld::menuSendCallback(Ref* pSender)
 	user.SerializeToString(&userbuf);
 	TcpMsg->pushSendQueue(userbuf, 1003);
 
-	//talkbox::talk_create user2;
-	//user2.ParseFromString(userbuf);
-	//CCLOG("userid:%d,name:%s", user2.userid(),user2.name().c_str());
-
-	//send
-	//std::string msg = "{\"username\":\"test106\",\"password\":\"111111\"}";
-	//TcpMsg->pushSendQueue(msg, 105);
 	CCLOG("menuSendCallback");
 
 	//TcpMsg->sendFunc();
@@ -152,24 +144,43 @@ void HelloWorld::msgLogic(float dt)
 			
 			switch (pk->id)
 			{
-				case 1000:
+				case 1000://登陆结果
 					GOOGLE_PROTOBUF_VERIFY_VERSION;
 					{
 					talkbox::talk_result result;
 					result.ParseFromString(pk->msg);
-					sprintf(txt, "\nnew msg: msgid:%d,len:%d,result:%d", pk->id, strlen(pk->msg), result.id());
+					sprintf(txt, "\nlogin result: msgid:%d,len:%d,result:%d", pk->id, strlen(pk->msg), result.id());
 					}
 					break;
-				case 1008:
+				case 1008://登陆成功信息
 					GOOGLE_PROTOBUF_VERIFY_VERSION;
 					{
 						talkbox::talk_create create;
 						create.ParseFromString(pk->msg);
-						sprintf(txt, "\nnew msg: msgid:%d,len:%d,userid:%d,name:%s", pk->id, strlen(pk->msg), create.userid(),create.name().c_str());
+						sprintf(txt, "\nlogin info: msgid:%d,len:%d,userid:%d,name:%s", pk->id, strlen(pk->msg), create.userid(),create.name().c_str());
+					}
+					break;
+				case 1010://获得消息
+					GOOGLE_PROTOBUF_VERIFY_VERSION;
+					{
+						talkbox::talk_message message;
+						message.ParseFromString(pk->msg);
+						sprintf(txt, "\nnew msg: msgid:%d,len:%d,fromuserid:%d,touserid:%d,msg:%s", pk->id, strlen(pk->msg), message.fromuserid(),message.touserid(),message.msg().c_str());
+					}
+					break;
+				case 1002://获得用户
+					GOOGLE_PROTOBUF_VERIFY_VERSION;
+					{
+						talkbox::talk_users users;
+						users.ParseFromString(pk->msg);
+						for (int i = 0; i < users.users_size(); i++) {
+							const talkbox::talk_users_talk_user user = users.users(i);
+							sprintf(txt, "\nnew user: msgid:%d,len:%d,userid:%d,name:%s", pk->id, strlen(pk->msg), user.userid(), user.name().c_str());
+						}
 					}
 					break;
 				default:
-					sprintf(txt, "\nnew msg: msgid:%d,len:%d", pk->id, strlen(pk->msg));
+					sprintf(txt, "\nunkonw msg: msgid:%d,len:%d", pk->id, strlen(pk->msg));
 					break;
 			}
 		}

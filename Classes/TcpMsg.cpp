@@ -131,7 +131,7 @@ void TcpMsg::sendFunc(void)
 		Pocket* pk = m_sendQueue->PullPocket();
 		if (pk->id>0)
 		{
-			char* sendData =  new CHAR[pk->length + 8];
+			char* sendData =  new char[pk->length + 8];
 			memset(sendData, 0, pk->length + 8);
 
 			sendData[0] = ((pk->length+6) >> 8) & 0xff;
