@@ -1,12 +1,12 @@
 #include "HelloWorldScene.h"
-#include "cocostudio/CocoStudio.h"
+//#include "cocostudio/CocoStudio.h"
 #include "ui/CocosGUI.h"
 
 
 
 
 USING_NS_CC;
-using namespace cocostudio::timeline;
+//using namespace cocostudio::timeline;
 
 Scene* HelloWorld::createScene()
 {
@@ -74,14 +74,14 @@ bool HelloWorld::init()
 		this->addChild(txtLabel, 101);
 
 		//设置背景
-		//Sprite *bg = Sprite::create("HelloWorld.png");
-		//bg->setPosition(Vec2(wsize.width, wsize.height));
-		//bg->setContentSize(Size::Size(wsize.width, wsize.height));
-		//float spx = bg->getTextureRect().getMaxX();
-		//float spy = bg->getTextureRect().getMaxY();
-		//bg->setScaleX(wsize.width / spx); //设置精灵宽度缩放比例
-		//bg->setScaleY(wsize.height / spy);
-		//this->addChild(bg, 0);
+		Sprite *bg = Sprite::create("HelloWorld.png");
+		bg->setPosition(Vec2(wsize.width, wsize.height));
+		bg->setContentSize(Size(wsize.width, wsize.height));
+		float spx = bg->getTextureRect().getMaxX();
+		float spy = bg->getTextureRect().getMaxY();
+		bg->setScaleX(wsize.width / spx); //设置精灵宽度缩放比例
+		bg->setScaleY(wsize.height / spy);
+		this->addChild(bg, 0);
 		
 
 		//定时调度

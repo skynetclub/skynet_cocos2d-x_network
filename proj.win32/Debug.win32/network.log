@@ -1,0 +1,12 @@
+﻿  AppDelegate.cpp
+  talkbox.cc
+  HelloWorldScene.cpp
+  ODSocket.cpp
+  Pocket.cpp
+  Queue.cpp
+  TcpMsg.cpp
+  main.cpp
+  复制了 60 个文件
+     正在创建库 D:\cocos2dx_example\workplace\network\proj.win32\Debug.win32\network.lib 和对象 D:\cocos2dx_example\workplace\network\proj.win32\Debug.win32\network.exp
+  network.vcxproj -> D:\cocos2dx_example\workplace\network\proj.win32\Debug.win32\network.exe
+  复制了 0 个文件
