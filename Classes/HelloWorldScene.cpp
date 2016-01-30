@@ -33,7 +33,7 @@ bool HelloWorld::init()
 			CC_CALLBACK_1(HelloWorld::menuCloseCallback, this)
 		);
 		CC_BREAK_IF(!pCloseItem);
-		pCloseItem->setPosition(Vec2(wsize.width - 20, 20));
+		pCloseItem->setPosition(Vec2(wsize.width - 20, wsize.height - 20));
 		Menu* pMenu1 = Menu::create(pCloseItem, NULL);
 		pMenu1->setPosition(Point::ZERO);
 		CC_BREAK_IF(!pMenu1);
@@ -45,7 +45,7 @@ bool HelloWorld::init()
 			CC_CALLBACK_1(HelloWorld::menuBeginCallback, this)
 		);
 		CC_BREAK_IF(!pBeginItem);
-		pBeginItem->setPosition(Vec2(wsize.width / 4, wsize.height / 2));
+		pBeginItem->setPosition(Vec2(wsize.width/2 - 40, 20));
 		Menu* pMenu2 = Menu::create(pBeginItem, NULL);
 		pMenu2->setPosition(Point::ZERO);
 		CC_BREAK_IF(!pMenu2);
@@ -57,7 +57,7 @@ bool HelloWorld::init()
 			CC_CALLBACK_1(HelloWorld::menuSendCallback, this)
 		);
 		CC_BREAK_IF(!pSendItem);
-		pSendItem->setPosition(Vec2(wsize.width - 100, wsize.height / 2));
+		pSendItem->setPosition(Vec2(wsize.width/2 + 40, 20));
 		Menu* pMenu3 = Menu::create(pSendItem, NULL);
 		pMenu3->setPosition(Point::ZERO);
 		CC_BREAK_IF(!pMenu3);
@@ -70,7 +70,8 @@ bool HelloWorld::init()
 
 		//内容显示
 		txtLabel = Label::createWithSystemFont("content", "Arial", 24);
-		txtLabel->setPosition(Vec2(wsize.width / 2, wsize.height / 3));
+		txtLabel->setAnchorPoint(Point(0,0));
+		txtLabel->setPosition(Vec2(40, 80));
 		this->addChild(txtLabel, 101);
 
 		//设置背景
@@ -81,7 +82,10 @@ bool HelloWorld::init()
 		float spy = bg->getTextureRect().getMaxY();
 		bg->setScaleX(wsize.width / spx); //设置精灵宽度缩放比例
 		bg->setScaleY(wsize.height / spy);
-		this->addChild(bg, 0);
+		//this->addChild(bg, 0);
+
+		auto red = LayerColor::create(Color4B(255, 100, 100, 128), wsize.width, wsize.height);
+		this->addChild(red, 0);
 		
 
 		//定时调度
