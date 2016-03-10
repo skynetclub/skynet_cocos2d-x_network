@@ -23,10 +23,12 @@ bool HelloWorld::init()
 	bool bRet = false;
 	do
 	{
+		userid = 0;
+
 		CC_BREAK_IF(!Layer::init());
 		auto wsize = Director::getInstance()->getWinSize();
 		
-		//关闭按钮
+		//退出按钮
 		MenuItemImage *pCloseItem = MenuItemImage::create(
 			"CloseNormal.png",
 			"CloseSelected.png",
@@ -38,41 +40,61 @@ bool HelloWorld::init()
 		pMenu1->setPosition(Point::ZERO);
 		CC_BREAK_IF(!pMenu1);
 		
-		//开始按钮
-		MenuItemImage *pBeginItem = MenuItemImage::create(
+		//网络按钮
+		MenuItemImage *pLinkItem = MenuItemImage::create(
 			"CloseNormal.png",
 			"CloseSelected.png",
-			CC_CALLBACK_1(HelloWorld::menuBeginCallback, this)
+			CC_CALLBACK_1(HelloWorld::menuLinkCallback, this)
 		);
-		CC_BREAK_IF(!pBeginItem);
-		pBeginItem->setPosition(Vec2(wsize.width/2 - 40, 20));
-		Menu* pMenu2 = Menu::create(pBeginItem, NULL);
+		CC_BREAK_IF(!pLinkItem);
+		pLinkItem->setPosition(Vec2(wsize.width / 2 - 60, 20));
+		Menu* pMenu2 = Menu::create(pLinkItem, NULL);
 		pMenu2->setPosition(Point::ZERO);
 		CC_BREAK_IF(!pMenu2);
+
+		//登陆按钮
+		MenuItemImage *pLoginItem = MenuItemImage::create(
+			"CloseNormal.png",
+			"CloseSelected.png",
+			CC_CALLBACK_1(HelloWorld::menuLoginCallback, this)
+		);
+		CC_BREAK_IF(!pLoginItem);
+		pLoginItem->setPosition(Vec2(wsize.width / 2, 20));
+		Menu* pMenu3 = Menu::create(pLoginItem, NULL);
+		pMenu3->setPosition(Point::ZERO);
+		CC_BREAK_IF(!pMenu3);
 
 		//发送按钮
 		MenuItemImage *pSendItem = MenuItemImage::create(
 			"CloseNormal.png",
 			"CloseSelected.png",
 			CC_CALLBACK_1(HelloWorld::menuSendCallback, this)
-		);
+			);
 		CC_BREAK_IF(!pSendItem);
-		pSendItem->setPosition(Vec2(wsize.width/2 + 40, 20));
-		Menu* pMenu3 = Menu::create(pSendItem, NULL);
-		pMenu3->setPosition(Point::ZERO);
-		CC_BREAK_IF(!pMenu3);
+		pSendItem->setPosition(Vec2(wsize.width / 2 + 60, 20));
+		Menu* pMenu4 = Menu::create(pSendItem, NULL);
+		pMenu4->setPosition(Point::ZERO);
+		CC_BREAK_IF(!pMenu4);
 
 
 		//添加三个按钮到player层
 		this->addChild(pMenu1, 1);
 		this->addChild(pMenu2, 2);
 		this->addChild(pMenu3, 3);
+		this->addChild(pMenu4, 4);
 
 		//内容显示
 		txtLabel = Label::createWithSystemFont("content", "Arial", 24);
 		txtLabel->setAnchorPoint(Point(0,0));
-		txtLabel->setPosition(Vec2(40, 80));
+		txtLabel->setPosition(Vec2(40, 150));
 		this->addChild(txtLabel, 101);
+
+		// 创建输入框
+		txtInput = TextFieldTTF::textFieldWithPlaceHolder("input message", "Arial", 24);
+		txtInput->setPosition(Vec2(wsize.width / 2, 80));
+		txtInput->attachWithIME();
+		txtInput->setString("xfs");
+		this->addChild(txtInput, 2);
 
 		//设置背景
 		Sprite *bg = Sprite::create("HelloWorld.png");
@@ -102,7 +124,7 @@ void HelloWorld::menuCloseCallback(Ref* pSender)
 	Director::getInstance()->end();
 }
 
-void HelloWorld::menuBeginCallback(Ref* pSender)
+void HelloWorld::menuLinkCallback(Ref* pSender)
 {
 	TcpMsg* TcpMsg = TcpMsg::shareTcpMsg();
 	if (TcpMsg->isRuning())
@@ -116,7 +138,7 @@ void HelloWorld::menuBeginCallback(Ref* pSender)
 	
 }
 
-void HelloWorld::menuSendCallback(Ref* pSender)
+void HelloWorld::menuLoginCallback(Ref* pSender)
 {
 	TcpMsg* TcpMsg = TcpMsg::shareTcpMsg();
 
@@ -124,11 +146,29 @@ void HelloWorld::menuSendCallback(Ref* pSender)
 	GOOGLE_PROTOBUF_VERIFY_VERSION;
 
 	talkbox::talk_create user;
-	user.set_name("xfs");
+	user.set_name(txtInput->getString().c_str());
 	user.set_userid(123);
 	std::string userbuf;
 	user.SerializeToString(&userbuf);
 	TcpMsg->pushSendQueue(userbuf, 1003);
+
+	CCLOG("menuLoginCallback");
+
+	//TcpMsg->sendFunc();
+}
+
+void HelloWorld::menuSendCallback(Ref* pSender)
+{
+	TcpMsg* TcpMsg = TcpMsg::shareTcpMsg();
+
+	GOOGLE_PROTOBUF_VERIFY_VERSION;
+	talkbox::talk_message msg;
+	msg.set_msg(txtInput->getString().c_str());
+	msg.set_touserid(-1);
+	msg.set_fromuserid(userid);
+	std::string msgbuf;
+	msg.SerializeToString(&msgbuf);
+	TcpMsg->pushSendQueue(msgbuf, 1005);
 
 	CCLOG("menuSendCallback");
 
@@ -162,6 +202,7 @@ void HelloWorld::msgLogic(float dt)
 						talkbox::talk_create create;
 						create.ParseFromString(pk->msg);
 						sprintf(txt, "\nlogin info: msgid:%d,len:%d,userid:%d,name:%s", pk->id, strlen(pk->msg), create.userid(),create.name().c_str());
+						userid = create.userid();
 					}
 					break;
 				case 1010://获得消息

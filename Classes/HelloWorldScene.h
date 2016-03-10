@@ -21,7 +21,8 @@ public:
 	static Scene* createScene();
 	// a selector callback
 	void menuCloseCallback(Ref* pSender);
-	void menuBeginCallback(Ref* pSender);
+	void menuLinkCallback(Ref* pSender);
+	void menuLoginCallback(Ref* pSender);
 	void menuSendCallback(Ref* pSender);
 
 	// implement the "static node()" method manually
@@ -31,6 +32,8 @@ public:
 
 private:
 	Label* txtLabel;
+	TextFieldTTF* txtInput;
+	int userid;
 };
 
 #endif // __HELLOWORLD_SCENE_H__
