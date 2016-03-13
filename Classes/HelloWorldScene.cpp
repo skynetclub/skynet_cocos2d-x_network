@@ -78,23 +78,32 @@ bool HelloWorld::init()
 
 
 		//添加三个按钮到player层
-		this->addChild(pMenu1, 1);
+		this->addChild(pMenu1, 2);
 		this->addChild(pMenu2, 2);
-		this->addChild(pMenu3, 3);
-		this->addChild(pMenu4, 4);
+		this->addChild(pMenu3, 2);
+		this->addChild(pMenu4, 2);
+
+		// 创建输入框
+		//txtInput = TextFieldTTF::textFieldWithPlaceHolder("input message", "Arial", 24);
+		//txtInput->setPosition(Vec2(wsize.width / 2, 80));
+		//txtInput->attachWithIME();
+		//txtInput->setString("xfs");
+		//this->addChild(txtInput, 3);
+		// 创建输入框
+		txtInput = CursorTextField::textFieldWithPlaceHolder(this, "Input Text", "Thonburi", 24);
+		txtInput->setAnchorPoint(Point(0.0f, 0.0f));
+		txtInput->setInputWidth(wsize.width);
+		txtInput->setPosition(Vec2(wsize.width / 5, 80));
+		txtInput->setString("xfs");
+		this->addChild(txtInput, 0);
+
 
 		//内容显示
 		txtLabel = Label::createWithSystemFont("content", "Arial", 24);
-		txtLabel->setAnchorPoint(Point(0,0));
+		txtLabel->setAnchorPoint(Point(0, 0));
 		txtLabel->setPosition(Vec2(40, 150));
-		this->addChild(txtLabel, 101);
+		this->addChild(txtLabel, 4);
 
-		// 创建输入框
-		txtInput = TextFieldTTF::textFieldWithPlaceHolder("input message", "Arial", 24);
-		txtInput->setPosition(Vec2(wsize.width / 2, 80));
-		txtInput->attachWithIME();
-		txtInput->setString("xfs");
-		this->addChild(txtInput, 2);
 
 		//设置背景
 		Sprite *bg = Sprite::create("HelloWorld.png");
@@ -126,6 +135,7 @@ void HelloWorld::menuCloseCallback(Ref* pSender)
 
 void HelloWorld::menuLinkCallback(Ref* pSender)
 {
+	CCLOG(txtInput->getString().c_str());
 	TcpMsg* TcpMsg = TcpMsg::shareTcpMsg();
 	if (TcpMsg->isRuning())
 	{

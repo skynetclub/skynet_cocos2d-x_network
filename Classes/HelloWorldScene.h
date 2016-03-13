@@ -5,6 +5,8 @@
 #include "Pocket.h"
 #include "TcpMsg.h"
 
+#include "utils/CursorTextField.h"
+
 #include "data/talkbox.h"
 #pragma comment(lib, "libprotobuf.lib")
 #pragma comment(lib, "libprotoc.lib")
@@ -31,8 +33,8 @@ public:
 	void msgLogic(float dt);
 
 private:
-	Label* txtLabel;
-	TextFieldTTF* txtInput;
+	Label *txtLabel;
+	CursorTextField *txtInput;
 	int userid;
 };
 
