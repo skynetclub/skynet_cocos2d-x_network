@@ -26,6 +26,7 @@ public:
 	void menuLinkCallback(Ref* pSender);
 	void menuLoginCallback(Ref* pSender);
 	void menuSendCallback(Ref* pSender);
+	void userLogin(Ref* pSender);
 
 	// implement the "static node()" method manually
 	CREATE_FUNC(HelloWorld);

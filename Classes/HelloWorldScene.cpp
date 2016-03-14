@@ -122,6 +122,8 @@ bool HelloWorld::init()
 		//定时调度
 		this->schedule(schedule_selector(HelloWorld::msgLogic), 0.1f);
 
+		NotificationCenter::getInstance()->addObserver(this, callfuncO_selector(HelloWorld::userLogin), "login_ok", nullptr);
+
 		bRet = true;
 	} while (0);
 
@@ -185,6 +187,21 @@ void HelloWorld::menuSendCallback(Ref* pSender)
 	//TcpMsg->sendFunc();
 }
 
+void HelloWorld::userLogin(Ref* pSender){
+	NotificationCenter::getInstance()->removeObserver(this, "login_ok");
+
+	TcpMsg* TcpMsg = TcpMsg::shareTcpMsg();
+
+	GOOGLE_PROTOBUF_VERIFY_VERSION;
+	talkbox::talk_message msg;
+	msg.set_msg("hello every,i am newer!");
+	msg.set_touserid(-1);
+	msg.set_fromuserid(userid);
+	std::string msgbuf;
+	msg.SerializeToString(&msgbuf);
+	TcpMsg->pushSendQueue(msgbuf, 1005);
+}
+
 void HelloWorld::msgLogic(float dt)
 {
 	Queue* recvQueue = TcpMsg::shareTcpMsg()->getRecvQueue();
@@ -213,6 +230,8 @@ void HelloWorld::msgLogic(float dt)
 						create.ParseFromString(pk->msg);
 						sprintf(txt, "\nlogin info: msgid:%d,len:%d,userid:%d,name:%s", pk->id, strlen(pk->msg), create.userid(),create.name().c_str());
 						userid = create.userid();
+
+						NotificationCenter::getInstance()->postNotification("login_ok", nullptr);
 					}
 					break;
 				case 1010://获得消息
