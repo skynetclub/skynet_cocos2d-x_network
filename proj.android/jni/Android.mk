@@ -28,6 +28,8 @@ LOCAL_SRC_FILES := hellocpp/main.cpp \
                    ../../Classes/Queue.cpp \
                    ../../Classes/TcpMsg.cpp \
                    ../../Classes/data/talkbox.cc \
+                   ../../Classes/utils/CursorTextField.cpp \
+                   ../../Classes/utils/MyCharSet.cpp \
                     /cygdrive/e/forthxu/download/protobuf-2.5.0-bz2/src/google/protobuf/io/coded_stream.cc \
                     /cygdrive/e/forthxu/download/protobuf-2.5.0-bz2/src/google/protobuf/stubs/common.cc \
                     /cygdrive/e/forthxu/download/protobuf-2.5.0-bz2/src/google/protobuf/descriptor.cc \
