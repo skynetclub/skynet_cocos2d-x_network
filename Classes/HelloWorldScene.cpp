@@ -27,44 +27,44 @@ bool HelloWorld::init()
 
 		CC_BREAK_IF(!Layer::init());
 		auto wsize = Director::getInstance()->getWinSize();
-		
-		//ÍË³ö°´Å¥
+
+		//é€€å‡ºæŒ‰é’®
 		MenuItemImage *pCloseItem = MenuItemImage::create(
 			"CloseNormal.png",
 			"CloseSelected.png",
 			CC_CALLBACK_1(HelloWorld::menuCloseCallback, this)
-		);
+			);
 		CC_BREAK_IF(!pCloseItem);
 		pCloseItem->setPosition(Vec2(wsize.width - 20, wsize.height - 20));
 		Menu* pMenu1 = Menu::create(pCloseItem, NULL);
 		pMenu1->setPosition(Point::ZERO);
 		CC_BREAK_IF(!pMenu1);
-		
-		//ÍøÂç°´Å¥
+
+		//ç½‘ç»œæŒ‰é’®
 		MenuItemImage *pLinkItem = MenuItemImage::create(
 			"CloseNormal.png",
 			"CloseSelected.png",
 			CC_CALLBACK_1(HelloWorld::menuLinkCallback, this)
-		);
+			);
 		CC_BREAK_IF(!pLinkItem);
 		pLinkItem->setPosition(Vec2(wsize.width / 2 - 60, 20));
 		Menu* pMenu2 = Menu::create(pLinkItem, NULL);
 		pMenu2->setPosition(Point::ZERO);
 		CC_BREAK_IF(!pMenu2);
 
-		//µÇÂ½°´Å¥
+		//ç™»é™†æŒ‰é’®
 		MenuItemImage *pLoginItem = MenuItemImage::create(
 			"CloseNormal.png",
 			"CloseSelected.png",
 			CC_CALLBACK_1(HelloWorld::menuLoginCallback, this)
-		);
+			);
 		CC_BREAK_IF(!pLoginItem);
 		pLoginItem->setPosition(Vec2(wsize.width / 2, 20));
 		Menu* pMenu3 = Menu::create(pLoginItem, NULL);
 		pMenu3->setPosition(Point::ZERO);
 		CC_BREAK_IF(!pMenu3);
 
-		//·¢ËÍ°´Å¥
+		//å‘é€æŒ‰é’®
 		MenuItemImage *pSendItem = MenuItemImage::create(
 			"CloseNormal.png",
 			"CloseSelected.png",
@@ -76,20 +76,33 @@ bool HelloWorld::init()
 		pMenu4->setPosition(Point::ZERO);
 		CC_BREAK_IF(!pMenu4);
 
+		//åŠ¨ç”»æŒ‰é’®
+		MenuItemImage *pAnimateItem = MenuItemImage::create(
+			"CloseNormal.png",
+			"CloseSelected.png",
+			CC_CALLBACK_1(HelloWorld::menuAnimateCallback, this)
+			);
+		CC_BREAK_IF(!pAnimateItem);
+		pAnimateItem->setPosition(Vec2(wsize.width - 80, wsize.height - 20));
+		Menu* pMenu5 = Menu::create(pAnimateItem, NULL);
+		pMenu5->setPosition(Point::ZERO);
+		CC_BREAK_IF(!pMenu5);
 
-		//Ìí¼ÓÈý¸ö°´Å¥µ½player²ã
+
+		//æ·»åŠ ä¸‰ä¸ªæŒ‰é’®åˆ°playerå±‚
 		this->addChild(pMenu1, 2);
 		this->addChild(pMenu2, 2);
 		this->addChild(pMenu3, 2);
 		this->addChild(pMenu4, 2);
+		this->addChild(pMenu5, 2);
 
-		// ´´½¨ÊäÈë¿ò
+		// åˆ›å»ºè¾“å…¥æ¡†
 		//txtInput = TextFieldTTF::textFieldWithPlaceHolder("input message", "Arial", 24);
 		//txtInput->setPosition(Vec2(wsize.width / 2, 80));
 		//txtInput->attachWithIME();
 		//txtInput->setString("xfs");
 		//this->addChild(txtInput, 3);
-		// ´´½¨ÊäÈë¿ò
+		// åˆ›å»ºè¾“å…¥æ¡†
 		txtInput = CursorTextField::textFieldWithPlaceHolder(this, "Input Text", "Thonburi", 24);
 		txtInput->setAnchorPoint(Point(0.0f, 0.0f));
 		txtInput->setInputWidth(wsize.width);
@@ -98,31 +111,51 @@ bool HelloWorld::init()
 		this->addChild(txtInput, 0);
 
 
-		//ÄÚÈÝÏÔÊ¾
+		//å†…å®¹æ˜¾ç¤º
 		txtLabel = Label::createWithSystemFont("content", "Arial", 24);
 		txtLabel->setAnchorPoint(Point(0, 0));
 		txtLabel->setPosition(Vec2(40, 150));
 		this->addChild(txtLabel, 4);
 
 
-		//ÉèÖÃ±³¾°
+		//è®¾ç½®èƒŒæ™¯
 		Sprite *bg = Sprite::create("HelloWorld.png");
 		bg->setPosition(Vec2(wsize.width, wsize.height));
 		bg->setContentSize(Size(wsize.width, wsize.height));
 		float spx = bg->getTextureRect().getMaxX();
 		float spy = bg->getTextureRect().getMaxY();
-		bg->setScaleX(wsize.width / spx); //ÉèÖÃ¾«Áé¿í¶ÈËõ·Å±ÈÀý
+		bg->setScaleX(wsize.width / spx); //è®¾ç½®ç²¾çµå®½åº¦ç¼©æ”¾æ¯”ä¾‹
 		bg->setScaleY(wsize.height / spy);
 		//this->addChild(bg, 0);
 
 		auto red = LayerColor::create(Color4B(255, 100, 100, 128), wsize.width, wsize.height);
 		this->addChild(red, 0);
-		
 
-		//¶¨Ê±µ÷¶È
+
+		//å®šæ—¶è°ƒåº¦
 		this->schedule(schedule_selector(HelloWorld::msgLogic), 0.1f);
 
+		//ç›‘å¬äº‹ä»¶
 		NotificationCenter::getInstance()->addObserver(this, callfuncO_selector(HelloWorld::userLogin), "login_ok", nullptr);
+
+		//é¢„åŠ è½½åŠ¨ç”»
+		SpriteFrameCache::getInstance()->addSpriteFramesWithFile("roleanimate/1001_effup.plist", "roleanimate/1001_effup.png");
+		SpriteFrameCache::getInstance()->addSpriteFramesWithFile("roleanimate/1001_role.plist", "roleanimate/1001_role.png");
+		auto animation = Animation::create();
+		animation->setDelayPerUnit(0.1f);
+		auto animation2 = Animation::create();
+		animation2->setDelayPerUnit(0.1f);
+		for (int j = 0; j < 439; j++){
+			auto sfName = String::createWithFormat("1001_effup/%04d", j)->getCString();
+			auto sf = SpriteFrameCache::getInstance()->getSpriteFrameByName(sfName);
+			animation->addSpriteFrame(sf);
+
+			auto sfName2 = String::createWithFormat("1001_role/%04d", j)->getCString();
+			auto sf2 = SpriteFrameCache::getInstance()->getSpriteFrameByName(sfName2);
+			animation2->addSpriteFrame(sf2);
+		}
+		AnimationCache::getInstance()->addAnimation(animation, String::create("1001_effup")->getCString());
+		AnimationCache::getInstance()->addAnimation(animation2, String::create("1001_role")->getCString());
 
 		bRet = true;
 	} while (0);
@@ -133,6 +166,31 @@ void HelloWorld::menuCloseCallback(Ref* pSender)
 {
 	// "close" menu item clicked
 	Director::getInstance()->end();
+}
+void HelloWorld::menuAnimateCallback(Ref* pSender)
+{
+	auto animation1 = AnimationCache::getInstance()->getAnimation(String::create("1001_effup")->getCString());
+	auto animate1 = RepeatForever::create(Animate::create(animation1));
+	animate1->setTag(1);
+
+	auto animation2 = AnimationCache::getInstance()->getAnimation(String::create("1001_role")->getCString());
+	auto animate2 = RepeatForever::create(Animate::create(animation2));
+	animate2->setTag(2);
+
+	//auto animate3 = Spawn::create(Animate::create(animation1), Animate::create(animation2), NULL);
+	//animate3->setTag(3);
+
+	auto wsize = Director::getInstance()->getWinSize();
+
+	auto heard_sp1 = Sprite::create("CloseNormal.png");
+	heard_sp1->setPosition(Point(wsize.width / 2, wsize.height / 2));
+	heard_sp1->runAction(animate1);
+	auto heard_sp2 = Sprite::create("CloseNormal.png");
+	heard_sp2->setPosition(Point(wsize.width / 2, wsize.height / 2));
+	heard_sp2->runAction(animate2);
+
+	this->addChild(heard_sp1, 2);
+	this->addChild(heard_sp2, 2);
 }
 
 void HelloWorld::menuLinkCallback(Ref* pSender)
@@ -187,6 +245,7 @@ void HelloWorld::menuSendCallback(Ref* pSender)
 	//TcpMsg->sendFunc();
 }
 
+//ç™»é™†äº‹ä»¶
 void HelloWorld::userLogin(Ref* pSender){
 	NotificationCenter::getInstance()->removeObserver(this, "login_ok");
 
@@ -215,7 +274,7 @@ void HelloWorld::msgLogic(float dt)
 			
 			switch (pk->id)
 			{
-				case 1000://µÇÂ½½á¹û
+				case 1000://ç™»é™†ç»“æžœ
 					GOOGLE_PROTOBUF_VERIFY_VERSION;
 					{
 					talkbox::talk_result result;
@@ -223,7 +282,7 @@ void HelloWorld::msgLogic(float dt)
 					sprintf(txt, "\nlogin result: msgid:%d,len:%d,result:%d", pk->id, strlen(pk->msg), result.id());
 					}
 					break;
-				case 1008://µÇÂ½³É¹¦ÐÅÏ¢
+				case 1008://ç™»é™†æˆåŠŸä¿¡æ¯
 					GOOGLE_PROTOBUF_VERIFY_VERSION;
 					{
 						talkbox::talk_create create;
@@ -231,10 +290,11 @@ void HelloWorld::msgLogic(float dt)
 						sprintf(txt, "\nlogin info: msgid:%d,len:%d,userid:%d,name:%s", pk->id, strlen(pk->msg), create.userid(),create.name().c_str());
 						userid = create.userid();
 
+						//å‘é€äº‹ä»¶
 						NotificationCenter::getInstance()->postNotification("login_ok", nullptr);
 					}
 					break;
-				case 1010://»ñµÃÏûÏ¢
+				case 1010://èŽ·å¾—æ¶ˆæ¯
 					GOOGLE_PROTOBUF_VERIFY_VERSION;
 					{
 						talkbox::talk_message message;
@@ -242,7 +302,7 @@ void HelloWorld::msgLogic(float dt)
 						sprintf(txt, "\nnew msg: msgid:%d,len:%d,fromuserid:%d,touserid:%d,msg:%s", pk->id, strlen(pk->msg), message.fromuserid(),message.touserid(),message.msg().c_str());
 					}
 					break;
-				case 1002://»ñµÃÓÃ»§
+				case 1002://èŽ·å¾—ç”¨æˆ·
 					GOOGLE_PROTOBUF_VERIFY_VERSION;
 					{
 						talkbox::talk_users users;
